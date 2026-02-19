@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useCart } from './context/CartContext';
+import { useWishlist } from './hooks/useWishlist'; // Added
 import Navbar from './components/Navbar';
 import ProductList from './components/ProductList';
 import ProductDetail from './components/ProductDetail';
@@ -9,6 +10,7 @@ function App() {
   const [currentView, setCurrentView] = useState('products');
   const [selectedProductId, setSelectedProductId] = useState(null);
   const { addToCart } = useCart();
+  const { toggleWishlist, isInWishlist } = useWishlist(); // Added
 
   const handleViewDetails = (productId) => {
     setSelectedProductId(productId);
@@ -34,7 +36,10 @@ function App() {
       <Navbar onViewCart={handleViewCart} />
       
       {currentView === 'products' && (
-        <ProductList onViewDetails={handleViewDetails} />
+        <ProductList 
+          onViewDetails={handleViewDetails} 
+          wishlistTools={{ toggleWishlist, isInWishlist }} // Passed tools
+        />
       )}
       
       {currentView === 'detail' && (
