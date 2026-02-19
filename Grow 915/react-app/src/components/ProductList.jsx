@@ -104,15 +104,17 @@ function ProductList({ onViewDetails, wishlistTools }) {
 
 // Helper for button styles
 const getBtnStyle = (isActive) => ({
-  padding: '8px 24px',
-  backgroundColor: isActive ? '#0066cc' : 'white',
-  color: isActive ? 'white' : '#0066cc',
-  border: '1px solid #0066cc',
-  borderRadius: '25px',
+  padding: '10px 24px',
+  backgroundColor: isActive ? '#0066cc' : '#f0f2f5',
+  color: isActive ? 'white' : '#555',
+  border: 'none',
+  borderRadius: '50px',
   cursor: 'pointer',
   textTransform: 'capitalize',
-  fontWeight: isActive ? '600' : '400',
-  transition: 'all 0.2s ease'
+  fontWeight: '600',
+  fontSize: '14px',
+  transition: 'all 0.2s ease-in-out',
+  boxShadow: isActive ? '0 4px 12px rgba(0, 102, 204, 0.3)' : 'none'
 });
 
 export default ProductList;
