@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import ProductCard from './ProductCard';
 import SearchBar from './SearchBar';
 import { useProductSearch } from '../hooks/useProductSearch';
+import { useWindowSize } from '../hooks/useWindowSize'; // 
 
 function ProductList({ onViewDetails, wishlistTools }) {
   const [products, setProducts] = useState([]);
@@ -10,10 +11,18 @@ function ProductList({ onViewDetails, wishlistTools }) {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
 
-  // Destructuring the search hook
+  
   const { searchTerm, setSearchTerm, filteredProducts, isSearching } = useProductSearch(products);
+  const { width } = useWindowSize(); // 
 
-  // Fetch Categories on mount
+  
+  const getGridColumns = () => {
+    if (width < 480) return '1fr'; // Mobile: 1 Column
+    if (width < 768) return 'repeat(2, 1fr)'; // Tablet: 2 Columns
+    if (width < 1024) return 'repeat(3, 1fr)'; // Small Laptop: 3 Columns
+    return 'repeat(4, 1fr)'; // Desktop: 4 Columns
+  };
+
   useEffect(() => {
     fetch('https://fakestoreapi.com/products/categories')
       .then(res => res.json())
@@ -21,7 +30,6 @@ function ProductList({ onViewDetails, wishlistTools }) {
       .catch(err => console.error("Error fetching categories:", err));
   }, []);
 
-  // Fetch Products based on Category
   useEffect(() => {
     setLoading(true);
     const url = selectedCategory === 'all'
@@ -75,18 +83,18 @@ function ProductList({ onViewDetails, wishlistTools }) {
         ))}
       </div>
 
-      {/* Product Grid */}
+      {/* Responsive Product Grid */}
       <div style={{ 
         display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', 
-        gap: '24px' 
+        gridTemplateColumns: getGridColumns(), // Use the dynamic function here
+        gap: '24px',
+        alignItems: 'start' // Prevents cards from stretching weirdly
       }}>
         {filteredProducts.map(product => (
           <ProductCard 
             key={product.id} 
             product={product} 
             onViewDetails={onViewDetails}
-            // Passing wishlist tools to each card
             isLiked={wishlistTools.isInWishlist(product.id)}
             onToggleWishlist={wishlistTools.toggleWishlist}
           />
@@ -102,7 +110,6 @@ function ProductList({ onViewDetails, wishlistTools }) {
   );
 }
 
-// Helper for button styles
 const getBtnStyle = (isActive) => ({
   padding: '10px 24px',
   backgroundColor: isActive ? '#0066cc' : '#f0f2f5',
