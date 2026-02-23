@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { Product } from "../types/product";
 
  
@@ -6,6 +7,7 @@ interface ProductCardProps {
 }
  
 function ProductCard({ product }: ProductCardProps) {
+  const [showDescription, setShowDescription] = useState<boolean>(false);
  
   const cardStyle: React.CSSProperties = {
     border: "1px solid #ddd",
@@ -39,6 +41,26 @@ function ProductCard({ product }: ProductCardProps) {
       <p style={{ fontSize: "13px", color: "#B45309" }}>
         ⭐ {product.rating.rate} ({product.rating.count} reviews)
       </p>
+      <button
+        onClick={() => setShowDescription(!showDescription)}
+        style={{
+          padding: "8px 16px",
+          backgroundColor: "#0284C7",
+          color: "#fff",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+          fontWeight: "bold",
+          fontSize: "14px"
+        }}
+      >
+        {showDescription ? "Hide Details" : "Show Details"}
+      </button>
+      {showDescription && (
+        <p style={{ fontSize: "12px", color: "#475569", lineHeight: "1.5", marginTop: "8px" }}>
+          {product.description}
+        </p>
+      )}
     </div>
   );
 }
